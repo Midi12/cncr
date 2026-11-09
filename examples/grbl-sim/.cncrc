@@ -1,8 +1,0 @@
-{
-    "ports": [
-        {
-            "path": "/dev/ttyFAKE",
-            "manufacturer": "grbl-sim"
-        }
-    ]
-}

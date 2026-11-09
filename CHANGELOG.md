@@ -1,4 +1,16 @@
-# cncjs
+# cncr
+
+## 2.0.0
+
+### Major Changes
+
+- Rewrite of the backend in Rust (`cncr` binary) and removal of the web interface, the Electron app and the Node.js toolchain.
+  - Same controllers (Grbl, Marlin, Smoothieware, TinyG/g2core), streaming protocols, macros/expressions, tool change, auto-level, watch directory, commands, events, users and `~/.cncrc` format.
+  - socket.io is replaced by a JSON WebSocket at `/ws` carrying the same events; REST API under `/api` unchanged except the removed `/api/version/latest`.
+  - Backward-compatibility events (`Grbl:state`, `Marlin:settings`, …) are no longer emitted.
+  - The private-network IP check now applies to the REST API too.
+
+# cncjs (history before the Rust rewrite)
 
 ## 1.11.5
 

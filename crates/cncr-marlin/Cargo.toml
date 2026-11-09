@@ -1,0 +1,14 @@
+[package]
+name = "cncr-marlin"
+description = "Marlin controller for the cncr CNC controller server"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+cncr-core.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+regex.workspace = true

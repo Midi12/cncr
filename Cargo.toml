@@ -1,0 +1,28 @@
+[workspace]
+resolver = "2"
+members = ["crates/*"]
+
+[workspace.package]
+version = "2.0.0"
+edition = "2021"
+license = "MIT"
+rust-version = "1.85"
+
+[workspace.dependencies]
+cncr-core = { path = "crates/cncr-core" }
+cncr-grbl = { path = "crates/cncr-grbl" }
+cncr-marlin = { path = "crates/cncr-marlin" }
+cncr-smoothie = { path = "crates/cncr-smoothie" }
+cncr-tinyg = { path = "crates/cncr-tinyg" }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time", "process", "fs", "io-util", "signal"] }
+tracing = "0.1"
+regex = "1"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+strip = true
+panic = "abort"

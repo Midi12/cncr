@@ -1,35 +1,29 @@
 # CLAUDE.md
 
-## Project: cncjs
+## Project: cncr
 
-CNC machine controller — Node.js/Express backend + React frontend communicating over Socket.IO.
+CNC controller server (Grbl/Marlin/Smoothie/TinyG) — Rust rewrite of the cncjs backend, no web UI.
+Clients talk REST (`/api/*`) + a JSON WebSocket (`/ws`) mirroring the cncjs socket.io events (see README).
 
-**Stack:**
-- Frontend: React 15.6 (class components), Redux, React Router 4, Stylus, Three.js (visualizer)
-- Backend: Node.js ≥18, Express 4, Socket.IO 2
-- Build: Webpack 5, Babel 7, Yarn
+**Stack:** Rust 2021, tokio, axum (http1 + ws), serialport, serde_json.
 
 **Key commands:**
 ```
-yarn dev          # dev server (Webpack + Express, concurrent)
-yarn build        # production build
-yarn lint         # ESLint + Stylint + i18n validation
-yarn eslint       # ESLint only (src/**/*.js, src/app/**/*.jsx)
-yarn test         # Jest (Node env, 10s timeout)
+cargo build --release
+cargo test
+cargo clippy --all-targets -- -D warnings
+cargo fmt
 ```
 
 **Structure:**
-- `src/app/` — React frontend (widgets, containers, styles, i18n)
-- `src/server/` — Express backend, machine controllers (Grbl/Marlin/Smoothie/TinyG)
-- `src/lib/` — Shared logic, 3D viz utilities
-- `grbl-simulator/` — Grbl simulator used in tests
+- `crates/cncr-core/` — config store, sender, feeder, workflow, serial, expression evaluator, G-code helpers, auto-level, watch dir, task runner; `controller.rs` is the contract between server and controllers
+- `crates/cncr-{grbl,marlin,smoothie,tinyg}/` — one controller each, one tokio task per open port owning all its state
+- `crates/cncr/` — `cncr` binary: WebSocket engine, REST API, auth, CLI
+- `grbl-simulator/` — Node Grbl simulator for manual end-to-end testing
 
 **Conventions:**
-- JavaScript only — no TypeScript, no `.ts`/`.tsx` files
-- Webpack alias `@app` → `src/app`
-- Stylus for all styles (no CSS modules, no Sass)
-- i18next for all user-facing strings (frontend and server)
-- ESLint extends `trendmicro` config
+- Controller tasks never block or sleep; delays are spawned timers sending a message back
+- Event payloads keep the cncjs JSON shapes (positions are strings where cncjs used strings)
 
 ---
 
